@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import argparse
+import sys
 from datetime import datetime
 
 from Rail350V import Rail350V
@@ -15,7 +16,7 @@ class MeterReader(object):
         try:
             self.meter = Rail350V(serial_port, 1)
         except OSError:
-            pass
+            raise
 
     def aquire_data(self):
         aquired_data = {}
@@ -35,18 +36,23 @@ class MeterReader(object):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("generator_name", help="name of the generator")
-    parser.add_argument("serial_port", help="serial port")
-    parser.add_argument("csv_file", help="csv log file location")
-    args = parser.parse_args()
+    try:
+    	parser = argparse.ArgumentParser()
+    	parser.add_argument("generator_name", help="name of the generator")
+    	parser.add_argument("serial_port", help="serial port")
+    	parser.add_argument("csv_file", help="csv log file location")
+        args = parser.parse_args()
 
-    reader = MeterReader(args.generator_name, args.serial_port)
+        reader = MeterReader(args.generator_name, args.serial_port)
 
-    for k, v in reader.aquire_data().iteritems():
-        print k
-        print v
-        print "****"
+        for k, v in reader.aquire_data().iteritems():
+            print k
+            print v
+            print "****"
+
+    except KeyboardInterrupt:
+        print "Shutdown requested...exiting"
+        sys.exit(0)
 
 if __name__ == '__main__':
     main()
