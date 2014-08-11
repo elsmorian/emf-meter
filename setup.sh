@@ -1,9 +1,11 @@
 #!/bin/bash
+source /usr/local/bin/virtualenvwrapper.sh
+
 echo Creating virtualenv...
 mkvirtualenv emf-meter
 
 echo Adding cd `pwd` to postactivate...
-echo "cd `pwd`\n" >> $WORKON_HOME/test/bin/postactivate
+echo "cd `pwd`" >> $WORKON_HOME/emf-meter/bin/postactivate
 
 echo Switching to virtualenv...
 workon emf-meter
