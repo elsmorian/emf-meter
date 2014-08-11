@@ -3,8 +3,10 @@ import minimalmodbus
 
 class Rail350V(minimalmodbus.Instrument):
     """Instrument class for ND Metering Solutions Rail 350V 3 Phase Meter.
-
     """
+
+    AVAILABLE_ATTRIBUTES = ['voltage', 'current', 'power', 'power_factor']
+    PHASE = {1: 'one', 2: 'two', 3: 'three'}
 
     def __init__(self, portname, slaveaddress):
         minimalmodbus.BAUDRATE = 4800
@@ -19,7 +21,22 @@ class Rail350V(minimalmodbus.Instrument):
     def read_system_frequency(self):
         """Read the system frequency"""
         val = self.read_register(2820, numberOfDecimals=1, signed=True)
-        return val
+        return
+
+    def read_phase_property(self, attribute=None, phase=None):
+        """Read an attribute of the meter.
+
+            :param int phase: Phase to be measured
+            :rtype float:
+        """
+        if attribute not in self.AVAILABLE_ATTRIBUTES:
+            return None
+
+        if phase not in self.PHASE.keys():
+            return None
+
+        func = "read_phase_{0}_{1}".format(self.PHASE[phase], attribute)
+        return getattr(self, func)()
 
     def read_phase_one_voltage(self):
         """Read the voltage from phase 1"""
