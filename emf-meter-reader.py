@@ -41,7 +41,7 @@ class MeterReader(object):
 
 class MeterCSVLogger(object):
 
-    def __init(self, csv_file):
+    def __init__(self, csv_file):
         self.CSV_HEADERS = ['channel', 'timestamp', 'value']
         self.file = csv_file
         if not os.path.isfile(self.file):
