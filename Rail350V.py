@@ -1,6 +1,7 @@
 
 import minimalmodbus
 
+
 class Rail350V(minimalmodbus.Instrument):
     """Instrument class for ND Metering Solutions Rail 350V 3 Phase Meter.
     """
@@ -21,7 +22,7 @@ class Rail350V(minimalmodbus.Instrument):
     def read_system_frequency(self):
         """Read the system frequency"""
         val = self.read_register(2820, numberOfDecimals=1, signed=True)
-        return
+        return val
 
     def read_phase_property(self, attribute=None, phase=None):
         """Read an attribute of the meter.
