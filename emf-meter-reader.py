@@ -25,17 +25,21 @@ class MeterReader(object):
     def aquire_data(self):
         aquired_data = {}
 
-        for phase in self.PHASES:
-            for attribute in self.ATTRIBUTES:
-                channel_name = "{0}.phase-{1}.{2}".format(
-                    self.channel_prefix, phase, attribute)
-                datum = {
-                    'timestamp': datetime.utcnow(),
-                    'value': self.meter.read_phase_property(
-                        attribute=attribute, phase=phase)
-                }
-                aquired_data.update({channel_name: datum})
-
+        try:
+            for phase in self.PHASES:
+                for attribute in self.ATTRIBUTES:
+                    channel_name = "{0}.phase-{1}.{2}".format(
+                        self.channel_prefix, phase, attribute)
+                    datum = {
+                        'timestamp': datetime.utcnow(),
+                        'value': self.meter.read_phase_property(
+                            attribute=attribute, phase=phase)
+                    }
+                    aquired_data.update({channel_name: datum})
+        except IOError:
+            # log IO error here
+            pass
+        
         return aquired_data
 
 
@@ -45,17 +49,17 @@ class MeterCSVLogger(object):
         self.CSV_HEADERS = ['channel', 'timestamp', 'value']
         self.file = csv_file
         if not os.path.isfile(self.file):
-            with open(self.file, 'wb') as fp:
+            with open(self.file, 'w') as fp:
                 writer = csv.writer(fp)
-                writer.write(self.CSV_HEADERS)
+                writer.writerow(self.CSV_HEADERS)
 
     def write_meter_data(self, meter_data):
-        with open(self.file, 'wb') as fp:
+        with open(self.file, 'a') as fp:
             writer = csv.writer(fp)
 
             for channel, datum in meter_data.iteritems():
                 row = [channel, datum['timestamp'], datum['value']]
-                writer.write(row)
+                writer.writerow(row)
 
 
 def main():
