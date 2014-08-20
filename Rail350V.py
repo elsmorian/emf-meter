@@ -10,7 +10,7 @@ class Rail350V(minimalmodbus.Instrument):
     PHASE = {1: 'one', 2: 'two', 3: 'three'}
 
     def __init__(self, portname, slaveaddress):
-        minimalmodbus.BAUDRATE = 4800
+        minimalmodbus.BAUDRATE = 19200
         minimalmodbus.TIMEOUT = 0.5
         minimalmodbus.Instrument.__init__(self, portname, slaveaddress)
 
